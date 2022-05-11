@@ -106,10 +106,63 @@ view: order_items {
   }
 
   measure: count {
+    label: "Items Ordered"
     type: count
     drill_fields: [detail*]
   }
 
+  measure: total_sale_price {
+    description: "Total sales from items sold (including cancelled and returned)"
+    type: sum
+    sql: ${sale_price} ;;
+    value_format: "$#,##0.00"
+  }
+
+  measure: average_sale_price {
+    description: "Average sale price of items sold"
+    type: average
+    sql: ${sale_price} ;;
+    value_format: "$#,##0.00"
+  }
+
+  measure: total_users_with_orders {
+    label: "Active Users"
+    description: "Users that have placed at least one order"
+    type: count_distinct
+    sql: ${user_id} ;;
+  }
+
+  measure: total_orders {
+    type: count_distinct
+    sql: ${order_id} ;;
+  }
+
+  dimension: is_2022 {
+    type: number
+    sql: 2022 ;;
+    value_format: "0"
+  }
+
+  parameter: timeframe_picker {
+    label: "Timefilter"
+    type: string
+    allowed_value: {
+      label: "This Year"
+      value: "This year"
+    }
+    allowed_value: {
+      label: "Last Year"
+      value: "Last year"
+    }
+    allowed_value: {
+      label: "{{_is_2022._name}}"
+      value: "2022"
+    }
+    }
+
+ dimension: test_dim  {
+   type: string
+ }
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
